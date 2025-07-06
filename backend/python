@@ -1,0 +1,14 @@
+# test_preview.py
+def test_file_preview(client, test_user, test_issue):
+    # Auth test
+    response = client.get(f"/issues/{test_issue.id}/preview")
+    assert response.status_code == 401
+    
+    # Valid request
+    headers = {"Authorization": f"Bearer {test_user.token}"}
+    response = client.get(
+        f"/issues/{test_issue.id}/preview", 
+        headers=headers
+    )
+    assert response.status_code == 200
+    assert "application/pdf" in response.headers["content-type"]
